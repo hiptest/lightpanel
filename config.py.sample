@@ -1,0 +1,22 @@
+from jenkins import JeanXV
+
+CHECK_INTERVAL = 60
+BLINK_INTERVAL = 0.5
+
+LEDS = [None] * 10
+
+#################
+# LED disposition
+# 4             5
+# 3             6
+# 2             7
+# 1             8
+# 0             9
+#################
+
+LEDS[0] = JeanXV(
+    jenkins_server = 'https://myserver/jenkins',
+    job_name = 'my-project',
+    username = 'admin',
+    password = '123456')
+
