@@ -143,3 +143,8 @@ WHITE = bytearray(b'\xff\xff\xff')
 WHITESMOKE = bytearray(b'\xf5\xf5\xf5')
 YELLOW = bytearray(b'\xff\xff\x00')
 YELLOWGREEN = bytearray(b'\x9a\xcd\x32')
+
+STATIC = 0
+BLINK = 1
+FADE = 2
+

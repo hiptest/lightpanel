@@ -8,12 +8,12 @@ import threading
 import signal
 import sys
 
-from config import LEDS, CHECK_INTERVAL, BLINK_INTERVAL
+from config import LEDS, CHECK_INTERVAL, BLINK_INTERVAL, FADE
 
-STATIC = 0
-BLINK = 1
+from utils import byte_bound, fade_color
 
-strip = [(STATIC, colors.BLACK)] * len(LEDS)
+strip = [(colors.STATIC, colors.BLACK)] * len(LEDS)
+
 
 def update_strip():
     global strip
@@ -21,31 +21,51 @@ def update_strip():
     while True:
         for index, led in enumerate(LEDS):
             if led is None:
-                strip[index] = (STATIC, colors.BLACK)
+                strip[index] = (colors.STATIC, colors.BLACK)
                 continue
 
             try:
                 status = led.check()
-                color = led.success_color if status else led.failure_color
-                strip[index] = (STATIC, color)
+                strip[index] = led.status
+                led.notify()
 
-            except:               
-                strip[index] = (BLINK, colors.ORANGE)
+            except Exception as e:
+                strip[index] = (colors.BLINK, colors.ORANGE)
+                print '-----------------------------'
+                print 'Error on job #%s' % index
+                print e
 
         time.sleep(CHECK_INTERVAL)
 
 def display():
     global strip
 
-    while True:
-        on_strip = [x[1] for x in strip]
-        off_strip = [x[1] if x[0] == STATIC else colors.BLACK 
-                    for x in strip]
+    modifier = 0.01
+    color_filter = 0
 
-        writer.write(on_strip)
-        time.sleep(BLINK_INTERVAL)
-        writer.write(off_strip)
-        time.sleep(BLINK_INTERVAL)
+    while True:
+        computed_strip = []
+        if color_filter < 0 or color_filter > 1:
+            modifier = -modifier
+
+        for led in strip:
+            if led[0] == colors.STATIC:
+                computed_strip.append(led[1])
+                continue
+
+            if led[0] == colors.BLINK:
+                if modifier > 0:
+                    computed_strip.append(led[1])
+                else:
+                    computed_strip.append(colors.BLACK)
+                continue
+
+            color_filter += modifier
+            computed_strip.append(fade_color(led[1], color_filter))
+
+        writer.write([fade_color(x, FADE) for x in computed_strip])
+        time.sleep(0.01)
+
 
 threads = [threading.Thread(None, update_strip, None, (), {}),
            threading.Thread(None, display, None, (), {})]
@@ -58,3 +78,5 @@ def on_kill(signal, frame):
 [th.start() for th in threads]
 signal.signal(signal.SIGTERM, on_kill)
 signal.pause()
+
+
