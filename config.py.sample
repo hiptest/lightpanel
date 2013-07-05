@@ -1,0 +1,18 @@
+# -*- coding: utf8
+
+from jenkins import JeanXV
+from response import Response
+
+CHECK_INTERVAL = 60
+BLINK_INTERVAL = 0.5
+FADE = 0.2
+
+LEDS = [None] * 10
+
+LEDS[0] = JeanXV(
+    jenkins_server = 'https://jenkins.example.com',
+    job_name = 'myjob',
+    username = 'user',
+    password = 'secret')
+
+
