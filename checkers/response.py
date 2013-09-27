@@ -2,9 +2,9 @@
 from time import time
 from urllib2 import urlopen
 
-import colors
-from utils import bound, byte_bound
-from checker import BaseChecker
+from lightpanel import colors
+from lightpanel.utils import bound, byte_bound
+from lightpanel.checkers import BaseChecker
 
 class Response(BaseChecker):
     def __init__(self, check_url, min_time = 0, max_time = 1, check_number = 10):
