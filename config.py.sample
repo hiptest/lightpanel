@@ -7,6 +7,8 @@ BLINK_INTERVAL = 0.5
 FADE = 0.2
 
 LEDS = [None] * 10
+GRAPHITE_SERVER = 'metrics.mydomain.com'
+GRAPHITE_PORT = 2003
 
 #################
 # LED disposition

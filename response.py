@@ -5,9 +5,10 @@ from urllib2 import urlopen
 import colors
 from utils import bound, byte_bound
 from checker import BaseChecker
+from metrics import send_to_graphite
 
 class Response(BaseChecker):
-    def __init__(self, check_url, min_time = 0, max_time = 1, check_number = 10):
+    def __init__(self, check_url, min_time = 0, max_time = 1, check_number = 10, graphite_key = None):
         self.check_url = check_url
 
         self.min_time = float(min_time)
@@ -16,6 +17,7 @@ class Response(BaseChecker):
 
         self._step = (max_time - min_time) / 255.0
         self._response = max_time
+        self.graphite_key = graphite_key
 
     def check(self):
         responses = []
@@ -27,6 +29,8 @@ class Response(BaseChecker):
             responses.append(time() - now)
 
         self._response = sum(responses) / self.check_number
+        if self.graphite_key:
+            send_to_graphite(self.graphite_key, self._response)
 
     @property
     def status(self):
