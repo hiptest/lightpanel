@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf8
 
 import time
 import colors
@@ -12,7 +13,7 @@ from config import LEDS, CHECK_INTERVAL, BLINK_INTERVAL, FADE
 
 from utils import byte_bound, fade_color
 
-strip = [(colors.STATIC, colors.BLACK)] * len(LEDS)
+strip = [(colors.STATIC, colors.BLUE)] * len(LEDS)
 
 
 def update_strip():
@@ -25,7 +26,7 @@ def update_strip():
                 continue
 
             try:
-                status = led.check()
+                led.check()
                 strip[index] = led.status
                 led.notify()
 
@@ -35,6 +36,7 @@ def update_strip():
                 print 'Error on job #%s' % index
                 print e
 
+        #print [(x[0], '%s.%s.%s' % (x[1][0], x[1][1], x[1][2])) for x in strip]
         time.sleep(CHECK_INTERVAL)
 
 def display():
@@ -60,9 +62,9 @@ def display():
                     computed_strip.append(colors.BLACK)
                 continue
 
-            color_filter += modifier
             computed_strip.append(fade_color(led[1], color_filter))
 
+        color_filter += modifier
         writer.write([fade_color(x, FADE) for x in computed_strip])
         time.sleep(0.01)
 

@@ -1,3 +1,5 @@
+# -*- coding: utf8
+
 BLACK = bytearray(b'\x00\x00\x00')
 AQUA = bytearray(b'\x00\xff\xff')
 AQUAMARINE = bytearray(b'\x7f\xff\xd4')

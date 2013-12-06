@@ -1,3 +1,5 @@
+# -*- coding: utf8
+
 class BaseChecker(object):
     def check(self):
         raise NotImplementedError

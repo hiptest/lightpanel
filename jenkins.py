@@ -1,3 +1,4 @@
+# -*- coding: utf8
 import os
 import json
 import urllib
@@ -71,10 +72,13 @@ class JeanXV(BaseChecker):
 
         if status == FAILURE and status != self._status:
             try:
-                author_name = ['changeSet']['items'][0]['author']['fullName'].split('.')[0]
+                author_name = job_status['changeSet']['items'][0]['author']['fullName'].split('.')[0]
                 self._to_notify = author_name
             except:
-                pass
+                print job_status
+                self._to_notify = ' '
+        else:
+            self._to_notify = None
 
         self._status = status
 
@@ -82,8 +86,9 @@ class JeanXV(BaseChecker):
         if not self._to_notify:
             return
 
-        text = "%s t'as tout casse" % self._to_notify
-        os.system("espeak  -s 155 -a 200 -v french "+text+" ")
+        os.system("mpg123 /home/pi/lightpanel/caralarm.mp3")
+        text = u"%s t'as tout cassei" % self._to_notify
+        os.system("espeak  -s 125 -a 200 -v french \""+text+"\" ")
         self._to_notify = None
 
     @property
