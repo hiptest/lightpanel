@@ -9,11 +9,25 @@ import threading
 import signal
 import sys
 
-from config import LEDS, CHECK_INTERVAL, BLINK_INTERVAL, FADE
+from config import LEDS_COUNT, LEDS_CONFIG, CHECK_INTERVAL, BLINK_INTERVAL, FADE
+from jenkins import JeanXV
+from response import Response
 
 from utils import byte_bound, fade_color
 
-strip = [(colors.STATIC, colors.BLUE)] * len(LEDS)
+strip = [(colors.STATIC, colors.BLUE)] * LEDS_COUNT
+
+# Build LEDS array from LEDS_CONFIG
+def build_leds_from_config():
+    leds = [None] * LEDS_COUNT
+    for number, led_config in LEDS_CONFIG.iteritems():
+        led_class = globals()[led_config['class_name']]
+        args = led_config.get('args', [])
+        kwargs = led_config.get('kwargs', {})
+        leds[number] = led_class(*args, **kwargs)
+    return leds
+
+LEDS = build_leds_from_config()
 
 
 def update_strip():

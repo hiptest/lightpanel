@@ -1,12 +1,9 @@
 # Sample configuration file for lightpanel
 
-from jenkins import JeanXV
-
 CHECK_INTERVAL = 60
 BLINK_INTERVAL = 0.5
 FADE = 0.2
 
-LEDS = [None] * 10
 GRAPHITE_SERVER = 'metrics.mydomain.com'
 GRAPHITE_PORT = 2003
 
@@ -19,9 +16,29 @@ GRAPHITE_PORT = 2003
 # 0             9
 #################
 
-LEDS[0] = JeanXV(
-    jenkins_server = 'https://myserver/jenkins',
-    job_name = 'my-project',
-    username = 'admin',
-    password = '123456')
+LEDS_COUNT = 10
+LEDS_CONFIG = {
+  # number: {
+  #   class_name: "class_name", # may be 'Response' or 'JeanXV'
+  #   args: [arg, arg, arg]
+  #   kwargs: {key: arg, key: arg, ...}
+  # }
+  # => LED[number] will be affected with class_name(*args, **kwargs)
+  #
+  # examples:
+  # 0: {
+  #   'class_name': 'Response',
+  #   'args': ['http://www.example.com'],
+  #   'kwargs': {'graphite_key': 'site.time.response'}
+  # },
+  # 7: {
+  #   'class_name': 'JeanXV',
+  #   'kwargs': {
+  #     'jenkins_server': 'https://myserver/jenkins',
+  #     'job_name': 'my-project',
+  #     'username': 'admin',
+  #     'password': '123456',
+  #   }
+  # }
+}
 
