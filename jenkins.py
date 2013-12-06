@@ -1,11 +1,16 @@
 # -*- coding: utf8
 import os
 import json
+import re
 import urllib
 
 import colors
 import writer
 from checker import BaseChecker
+try:
+    from config import SPEAK_SUBSTITUTION
+except ImportError:
+    SPEAK_SUBSTITUTION = {}
 
 FAILURE = 0
 SUCCESS = 1
@@ -88,8 +93,16 @@ class JeanXV(BaseChecker):
 
         os.system("mpg123 /home/pi/lightpanel/caralarm.mp3")
         text = u"%s t'as tout cassei" % self._to_notify
+        text = self.replace_speak_patterns(text)
         os.system("espeak  -s 125 -a 200 -v french \""+text+"\" ")
         self._to_notify = None
+
+    def replace_speak_patterns(self, s):
+        keys = [re.escape(key) for key in SPEAK_SUBSTITUTION.keys()]
+        if not keys:
+            return s
+        pattern = re.compile(r'\b(' + '|'.join(keys) + r')\b')
+        return pattern.sub(lambda x: SPEAK_SUBSTITUTION[x.group()], s.lower())
 
     @property
     def status(self):

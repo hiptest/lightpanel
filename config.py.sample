@@ -7,6 +7,11 @@ FADE = 0.2
 GRAPHITE_SERVER = 'metrics.mydomain.com'
 GRAPHITE_PORT = 2003
 
+# useful to tweak some speech patterns
+SPEAK_SUBSTITUTION = {
+  # "replace this spoken text": "by this one",
+}
+
 #################
 # LED disposition
 # 4             5
