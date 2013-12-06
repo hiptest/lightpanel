@@ -1,7 +1,10 @@
+# Sample configuration file for lightpanel
+
 from jenkins import JeanXV
 
 CHECK_INTERVAL = 60
 BLINK_INTERVAL = 0.5
+FADE = 0.2
 
 LEDS = [None] * 10
 
