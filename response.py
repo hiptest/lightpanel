@@ -1,4 +1,5 @@
 # -*- coding: utf8
+import os
 from time import time
 from urllib2 import urlopen
 
@@ -23,7 +24,12 @@ class Response(BaseChecker):
         responses = []
         for i in range(0, int(self.check_number + 1)):
             now = time()
-            index = urlopen(self.check_url)
+            try:
+                index = urlopen(self.check_url)
+            except:
+                os.system("mpg123 /home/pi/lightpanel/siteDown.mp3")
+                raise Exception('Coucou')
+
             if index.getcode() != 200:
                 raise ValueError('Incorrect response status')
             responses.append(time() - now)
