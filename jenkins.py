@@ -5,7 +5,6 @@ import re
 import urllib
 
 import colors
-import writer
 from checker import BaseChecker
 try:
     from config import SPEAK_SUBSTITUTION
