@@ -31,7 +31,7 @@ def update_strip():
                 led.notify()
 
             except Exception as e:
-                strip[index] = (colors.BLINK, colors.ORANGE)
+                strip[index] = (colors.BLINK, colors.ORANGERED)
                 print '-----------------------------'
                 print 'Error on job #%s' % index
                 print e
