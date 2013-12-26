@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [[ `whoami` != root ]] ; then
+  echo "Must be root. Use sudo"
+  exit 1
+fi
+
+if ps -ef | grep -q '[p]ython ./runner.py' ; then
+  echo "Stopping lightpanel"
+  ps -ef | grep '[p]ython ./runner.py' | awk '{print $2}' | xargs kill
+  sleep 1
+fi
+
+if ps -ef | grep -q '[p]ython ./runner.py' ; then
+  echo "Failed: lightpanel still running"
+  exit 1
+else
+  echo "Starting lightpanel"
+  ./runner.py &
+fi
