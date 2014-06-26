@@ -10,6 +10,10 @@ try:
     from config import SPEAK_SUBSTITUTION
 except ImportError:
     SPEAK_SUBSTITUTION = {}
+try:
+    from config import AUTHOR_NAME_SUBSTITUTION
+except ImportError:
+    AUTHOR_NAME_SUBSTITUTION = {}
 
 FAILURE = 0
 SUCCESS = 1
@@ -76,8 +80,8 @@ class JeanXV(BaseChecker):
 
         if status == FAILURE and status != self._status:
             try:
-                author_name = job_status['changeSet']['items'][0]['author']['fullName'].split('.')[0]
-                self._to_notify = author_name
+                author_name = job_status['changeSet']['items'][0]['author']['fullName']
+                self._to_notify = get_real_name(author_name)
             except:
                 print job_status
                 self._to_notify = ' '
@@ -95,6 +99,10 @@ class JeanXV(BaseChecker):
         text = self.replace_speak_patterns(text)
         os.system("espeak  -s 125 -a 200 -v french \""+text+"\" ")
         self._to_notify = None
+
+    def get_real_name(self, author_name):
+        default_name = author_name.split('.')[0]
+        return AUTHOR_NAME_SUBSTITUTION.get(author_name, default_name)
 
     def replace_speak_patterns(self, s):
         keys = [re.escape(key) for key in SPEAK_SUBSTITUTION.keys()]
@@ -114,6 +122,6 @@ class JeanXV(BaseChecker):
         if self._status == SUCCESS:
             self._color = self.success_color
         else:
-            self._color = self.failure_color        
+            self._color = self.failure_color
 
         return (colors.STATIC, self._color)
